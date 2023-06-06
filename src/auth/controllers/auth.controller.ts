@@ -13,13 +13,13 @@ export class AuthController {
   private readonly service: AuthService;
 
   @Post('login')
-  private login(@Body() body: LoginDto): Promise<string | never> {
+  private login(@Body() body: LoginDto): Promise<{}> {
     return this.service.login(body);
   }
 
   @Post('refresh')
   @UseGuards(JwtAuthGuard)
-  private refresh(@Req() { user }: Request): Promise<string | never> {
+  private refresh(@Req() { user }: Request): Promise<{}> {
     return this.service.refresh(<User>user);
   }
 

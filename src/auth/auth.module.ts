@@ -8,6 +8,8 @@ import { AuthHelper } from './auth.helper';
 import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './auth.strategy';
 import { ConfigService } from '@nestjs/config';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
+
 
 @Module({
   imports: [
@@ -22,6 +24,6 @@ import { ConfigService } from '@nestjs/config';
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthHelper, JwtStrategy],
+  providers: [AuthService, AuthHelper, JwtStrategy, JwtAuthGuard],
 })
 export class AuthModule {}

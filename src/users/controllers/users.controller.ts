@@ -20,20 +20,22 @@ export class UsersController {
 	constructor(private readonly userService: UsersService) {}
   
 	@Get()
-	// @UseGuards(JwtAuthGuard)
+	@UseGuards(JwtAuthGuard)
   	// @UseInterceptors(ClassSerializerInterceptor)
-	getUsers() {
+	async getUsers(): Promise<{}> {
 	  return this.userService.getUsers();
 	}
 	
 	@Get('id/:id')
-	findUsersById(@Param('id', ParseIntPipe) id: number) {
+	@UseGuards(JwtAuthGuard)
+	async findUsersById(@Param('id', ParseIntPipe) id: number): Promise<{}> {
 	  return this.userService.findUsersById(id);
 	}
 	
 	@Post('id/:id')
+	@UseGuards(JwtAuthGuard)
 	@UsePipes(ValidationPipe)
-	async updateUsers(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+	async updateUsers(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto): Promise<{}> {
 		var timestamp = new Date().toISOString();
 		const data = {
 			username: updateUserDto.username,

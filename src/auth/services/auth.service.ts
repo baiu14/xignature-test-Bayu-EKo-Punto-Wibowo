@@ -14,7 +14,7 @@ export class AuthService {
   @Inject(AuthHelper)
   private readonly helper: AuthHelper;
 
-  public async login(body: LoginDto): Promise<string | never> {
+  public async login(body: LoginDto): Promise<{}> {
     const { email, password }: LoginDto = body;
     const user: User = await this.repository.findOne({ where: { email } });
 
@@ -29,18 +29,38 @@ export class AuthService {
     }
 
     this.repository.update(user.id, { last_login_at: new Date() });
-
-    return this.helper.generateToken(user);
+	const res = {
+		statusCode: HttpStatus.OK,
+		message: "Login Success!",
+		data: {
+			token: `Bearer ` + this.helper.generateToken(user) 
+		}
+	}
+    return res;
   }
 
-  public async refresh(user: User): Promise<string> {
+  public async refresh(user: User): Promise<{}> {
     this.repository.update(user.id, { last_login_at: new Date() });
-
-    return this.helper.generateToken(user);
+	const res = {
+		statusCode: HttpStatus.OK,
+		message: "Login Success!",
+		data: {
+			token: `Bearer ` + this.helper.generateToken(user) 
+		}
+	}
+    return res;
   }
 
-  register(createUserDto: CreateUserDto) {
+  public async register(createUserDto: CreateUserDto): Promise<{}> {
 	const newUser = this.repository.create(createUserDto);
-  return this.repository.save(newUser);
-}
+  	this.repository.save(newUser);
+	const res = {
+		statusCode: HttpStatus.OK,
+		message: "Registration Success!",
+		data: {
+			newUser
+		}
+	}
+	return res;
+  }
 }

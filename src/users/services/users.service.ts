@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from 'src/users/dtos/CreateUser.dto';
 import { UpdateUserDto } from 'src/users/dtos/UpdateUser.dto';
 
 @Injectable()
 export class UsersService {
 	constructor(
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
-	  ) {}
+	) {}
 		  
-	  getUsers() {
-		return this.userRepository.find();
-	  }
+	async getUsers(): Promise<{}> {
+		const user = await this.userRepository.find();
+		const res = {
+			statusCode: HttpStatus.OK,
+			message: "List User!",
+			data: {
+				user 
+			}
+		}
+		return res;
+	}
 		  
-	  findUsersById(id: number) {
-		return this.userRepository.findOneBy({id: id});
-	  }
+	async findUsersById(id: number): Promise<{}> {
+		const detail = await this.userRepository.findOneBy({id: id});
+		const res = {
+			statusCode: HttpStatus.OK,
+			message: "Detail User!",
+			data: {
+				detail: detail
+			}
+		}
+		return res;
+	}
 
-	  updateUser(id: number, updateUserDto: UpdateUserDto) {
-		// const newUser = this.userRepository.create(updateUserDto);
-	  return this.userRepository.update({ id: id },updateUserDto);
+	async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<{}> {
+	  	await this.userRepository.update({ id: id },updateUserDto);
+	  	const res = {
+			statusCode: HttpStatus.OK,
+			message: "user updated!!",
+			data: {
+			}
+		}
+		return res;
 	}
 }
